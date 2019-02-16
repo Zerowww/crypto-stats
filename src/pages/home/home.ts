@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, IonicPage } from 'ionic-angular';
 import { RestProvider } from '../../providers/rest/rest';
 import { CryptoCurrency } from '../../models/cryptoCurrency.model';
+import { CryptoCurrencyDetailPage } from '../crypto-currency-detail/crypto-currency-detail';
 @IonicPage()
 @Component({
   selector: 'page-home',
@@ -17,7 +18,12 @@ export class HomePage {
     this.getToplistCryptoCurrencies();
   }
 
-  public getToplistCryptoCurrencies() {
+  public goToCryptoCurrencyDetail(cryptoCurrency: CryptoCurrency): void {
+    console.log(cryptoCurrency);
+    this._navCtrl.push(CryptoCurrencyDetailPage, { id: cryptoCurrency.id });
+  }
+
+  public getToplistCryptoCurrencies(): void {
     this._rest.getToplistCryptoCurrencies().subscribe(
       (response: string[]) => {
         const data = response['Data'];
@@ -27,9 +33,9 @@ export class HomePage {
             id: data['CoinInfo']['Id'],
             name: data['CoinInfo']['Name'],
             fullname: data['CoinInfo']['FullName'],
-            imgPath: `/src/assets/imgs/cryptoCurrencies/${
+            imgPath: `./../../assets/imgs/cryptoCurrencies/${
               data['CoinInfo']['Name']
-            }.png`,
+            }.svg`,
             price: data['DISPLAY']['USD']['PRICE'],
             lastUpdated: data['DISPLAY']['USD']['LASTUPDATE'],
           };

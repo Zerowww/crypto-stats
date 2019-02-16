@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { RestProvider } from '../../providers/rest/rest';
+import { News } from '../../models/news.model';
 
 /**
  * Generated class for the NewsPage page.
@@ -14,12 +16,33 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'news.html',
 })
 export class NewsPage {
+  public news: News[];
+  constructor(
+    public _navCtrl: NavController,
+    public _navParams: NavParams,
+    private _rest: RestProvider
+  ) {}
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  ionViewDidLoad() {}
+
+  public getNews(): void {
+    this._rest.getNews().subscribe(
+      (response: string[]) => {
+        const data = response;
+
+        data.forEach(data => {
+          const news: News = {
+            id: data['id'],
+            linkPath: data['guid'],
+            title: data['title'],
+            imgPath: data['url'],
+            source: data['source'],
+          };
+          console.log(data);
+          this.news.push(news);
+        });
+      },
+      error => console.error(error)
+    );
   }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad NewsPage');
-  }
-
 }
