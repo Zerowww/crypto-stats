@@ -5,15 +5,22 @@ import { map, catchError } from 'rxjs/operators';
 
 @Injectable()
 export class RestProvider {
-
   private apiUrl = 'https://restcountries.eu/rest/v2/all';
 
-  constructor(public http: HttpClient) {
-    console.log('Hello RestProvider Provider');
-  }
+  private toplistApiUrl =
+    'https://min-api.cryptocompare.com/data/top/mktcapfull?limit=10&tsym=USD';
+
+  constructor(public http: HttpClient) {}
 
   getCountries(): Observable<string[]> {
     return this.http.get(this.apiUrl).pipe(
+      map(this.extractData),
+      catchError(this.handleError)
+    );
+  }
+
+  getToplistCryptoCurrencies(): Observable<string[]> {
+    return this.http.get(this.toplistApiUrl).pipe(
       map(this.extractData),
       catchError(this.handleError)
     );
@@ -24,7 +31,7 @@ export class RestProvider {
     return body || {};
   }
 
-  private handleError (error: Response | any) {
+  private handleError(error: Response | any) {
     let errMsg: string;
     if (error instanceof Response) {
       const err = error || '';
@@ -35,5 +42,4 @@ export class RestProvider {
     console.error(errMsg);
     return Observable.throw(errMsg);
   }
-
 }
