@@ -7,24 +7,21 @@ import { map, catchError } from 'rxjs/operators';
 export class RestProvider {
   private readonly _toplistApiUrl =
     'https://min-api.cryptocompare.com/data/top/mktcapfull?limit=10&tsym=USD';
-
   private readonly _newsApiUrl =
     'https://min-api.cryptocompare.com/data/v2/news/?lang=EN&sortOrder=popular';
-
   private readonly _priceApiUrl =
     'https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,GBP,EUR';
 
   constructor(public http: HttpClient) {}
 
+  /*
+   *
+   * GET
+   *
+   */
+
   public getToplistCryptoCurrencies(): Observable<string[]> {
     return this.http.get(this._toplistApiUrl).pipe(
-      map(this.extractData),
-      catchError(this.handleError)
-    );
-  }
-
-  public getNews(): Observable<string[]> {
-    return this.http.get(this._newsApiUrl).pipe(
       map(this.extractData),
       catchError(this.handleError)
     );
@@ -46,6 +43,19 @@ export class RestProvider {
       catchError(this.handleError)
     );
   }
+
+  public getNews(): Observable<string[]> {
+    return this.http.get(this._newsApiUrl).pipe(
+      map(this.extractData),
+      catchError(this.handleError)
+    );
+  }
+
+  /*
+   *
+   * UTILS
+   *
+   */
 
   private extractData(res: Response) {
     let body = res;

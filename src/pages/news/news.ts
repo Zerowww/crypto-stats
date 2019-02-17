@@ -3,13 +3,6 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { RestProvider } from '../../providers/rest/rest';
 import { News } from '../../models/news.model';
 
-/**
- * Generated class for the NewsPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
-
 @IonicPage()
 @Component({
   selector: 'page-news',
@@ -24,7 +17,7 @@ export class NewsPage {
     private _rest: RestProvider
   ) {}
 
-  ionViewDidLoad() {
+  public ionViewDidLoad() {
     this.getNews();
   }
 

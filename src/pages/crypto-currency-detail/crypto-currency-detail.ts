@@ -2,8 +2,8 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { RestProvider } from '../../providers/rest/rest';
 import { Subscription } from 'rxjs/Subscription';
-import Chart from 'chart.js';
 import { DatePipe } from '@angular/common';
+import Chart from 'chart.js';
 
 @IonicPage()
 @Component({
@@ -12,6 +12,7 @@ import { DatePipe } from '@angular/common';
 })
 export class CryptoCurrencyDetailPage {
   // Crypto trigram required for requests
+  // Also used as title
   public activeCryptoCurrencyName: string;
 
   // Crypto price evolution chart related
@@ -33,12 +34,16 @@ export class CryptoCurrencyDetailPage {
     public _navParams: NavParams,
     public _rest: RestProvider
   ) {
+    // It shouldn't be undefined and it wouldn't work right now anyway if it was
+    // But it is a nice example of using ternary expressions
     this._navParams.get('name')
       ? (this.activeCryptoCurrencyName = this._navParams.get('name'))
       : 'Crypto Stats';
   }
 
   public ionViewDidLoad(): void {
+    // I just want to be sure that all the data required for building my charts are there
+    // Before initializing them, that's why I use Promise
     this._initDailyData().then(() => {
       this._initDailyCharts();
     });
@@ -49,6 +54,8 @@ export class CryptoCurrencyDetailPage {
   }
 
   public ionViewWillLeave(): void {
+    // It is required to unsubscribe from your observables
+    // Before leaving the component
     this.subDailyData.unsubscribe();
     this.subPriceData.unsubscribe();
   }
@@ -60,6 +67,7 @@ export class CryptoCurrencyDetailPage {
    */
 
   private _initDailyCharts(): void {
+    // I use DatePipe to transform raw api data into a string
     const dailyChartLabels = this.dailyData.map(data => {
       return new DatePipe('en-En').transform(
         new Date(data['time']),
@@ -67,14 +75,12 @@ export class CryptoCurrencyDetailPage {
       );
     });
 
+    // The operator + easily casts a string into a number
+    // I could also use Number(data['close']);
     const dailyChartData = this.dailyData.map(data => {
       return +data['close'];
     });
 
-    console.log(dailyChartData);
-    console.log(this.dailyData);
-
-    console.log(new Date(this.dailyData[0]['time']));
     this.dailyBarChart = new Chart(this.dailyBarCanvas.nativeElement, {
       type: 'bar',
       data: {
@@ -100,9 +106,11 @@ export class CryptoCurrencyDetailPage {
           this.dailyData = data['Data'];
 
           if (this.dailyData) {
+            // I resolve my promise only when I'm sure I'm getting something back from my request
             resolve();
           } else {
             reject(() =>
+              // backticks are easier to read
               console.error(`this.dailyData undefined ${this.dailyData}`)
             );
           }
@@ -118,10 +126,6 @@ export class CryptoCurrencyDetailPage {
       Math.round(this.priceData[i])
     );
 
-    console.log(priceChartLabels);
-    console.log(priceChartData);
-
-    console.log(this.priceData);
     this.dailyBarChart = new Chart(this.dailyDoughnutCanvas.nativeElement, {
       type: 'doughnut',
       data: {
@@ -149,6 +153,7 @@ export class CryptoCurrencyDetailPage {
           this.priceData = data;
 
           if (this.priceData) {
+            // I resolve my promise only when I'm sure I'm getting something back from my request
             resolve();
           } else {
             reject(() =>

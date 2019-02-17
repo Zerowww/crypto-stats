@@ -9,6 +9,8 @@ import { MyApp } from './app.component';
 import { RestProvider } from '../providers/rest/rest';
 import { CryptoCurrencyDetailPage } from '../pages/crypto-currency-detail/crypto-currency-detail';
 
+// I just couldn't figure how to lazy load CryptoCurrencyDetailPage so I had to do it that way
+// I know it isn't supposed to be this way..
 @NgModule({
   declarations: [MyApp, CryptoCurrencyDetailPage],
   imports: [BrowserModule, HttpClientModule, IonicModule.forRoot(MyApp)],

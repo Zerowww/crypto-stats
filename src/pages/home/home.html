@@ -1,3 +1,4 @@
+<!-- I could make this header as a component since it is duplicated in 3 pages -->
 <ion-header>
   <ion-navbar color="primary">
     <ion-title>
@@ -27,6 +28,7 @@
       </h2>
       <p>Price: {{ c.price }}</p>
       <p>Last Updated: {{ c.lastUpdated }}</p>
+      <!-- I could pass c.name as argument -->
       <button (click)="goToCryptoCurrencyDetail(c)" ion-button block>
         Details
       </button>
