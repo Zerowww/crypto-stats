@@ -7,12 +7,13 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { MyApp } from './app.component';
 import { RestProvider } from '../providers/rest/rest';
+import { CryptoCurrencyDetailPage } from '../pages/crypto-currency-detail/crypto-currency-detail';
 
 @NgModule({
-  declarations: [MyApp],
+  declarations: [MyApp, CryptoCurrencyDetailPage],
   imports: [BrowserModule, HttpClientModule, IonicModule.forRoot(MyApp)],
   bootstrap: [IonicApp],
-  entryComponents: [MyApp],
+  entryComponents: [MyApp, CryptoCurrencyDetailPage],
   providers: [
     StatusBar,
     SplashScreen,

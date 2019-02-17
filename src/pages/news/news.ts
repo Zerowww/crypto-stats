@@ -16,31 +16,35 @@ import { News } from '../../models/news.model';
   templateUrl: 'news.html',
 })
 export class NewsPage {
-  public news: News[];
+  public news: News[] = [];
+
   constructor(
     public _navCtrl: NavController,
     public _navParams: NavParams,
     private _rest: RestProvider
   ) {}
 
-  ionViewDidLoad() {}
+  ionViewDidLoad() {
+    this.getNews();
+  }
 
   public getNews(): void {
     this._rest.getNews().subscribe(
-      (response: string[]) => {
-        const data = response;
+      (res: string[]) => {
+        const data = res['Data'];
 
         data.forEach(data => {
           const news: News = {
             id: data['id'],
-            linkPath: data['guid'],
+            linkPath: data['url'],
             title: data['title'],
-            imgPath: data['url'],
+            imgPath: data['imageurl'],
             source: data['source'],
           };
-          console.log(data);
           this.news.push(news);
         });
+        console.log(res);
+        console.log(this.news);
       },
       error => console.error(error)
     );

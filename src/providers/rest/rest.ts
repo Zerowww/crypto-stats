@@ -5,22 +5,16 @@ import { map, catchError } from 'rxjs/operators';
 
 @Injectable()
 export class RestProvider {
-  private _apiUrl = 'https://restcountries.eu/rest/v2/all';
-
-  private _toplistApiUrl =
+  private readonly _toplistApiUrl =
     'https://min-api.cryptocompare.com/data/top/mktcapfull?limit=10&tsym=USD';
 
-  private _newsApiIRL =
+  private readonly _newsApiUrl =
     'https://min-api.cryptocompare.com/data/v2/news/?lang=EN&sortOrder=popular';
 
-  constructor(public http: HttpClient) {}
+  private readonly _priceApiUrl =
+    'https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,GBP,EUR';
 
-  public getCountries(): Observable<string[]> {
-    return this.http.get(this._apiUrl).pipe(
-      map(this.extractData),
-      catchError(this.handleError)
-    );
-  }
+  constructor(public http: HttpClient) {}
 
   public getToplistCryptoCurrencies(): Observable<string[]> {
     return this.http.get(this._toplistApiUrl).pipe(
@@ -30,7 +24,24 @@ export class RestProvider {
   }
 
   public getNews(): Observable<string[]> {
-    return this.http.get(this._newsApiIRL).pipe(
+    return this.http.get(this._newsApiUrl).pipe(
+      map(this.extractData),
+      catchError(this.handleError)
+    );
+  }
+
+  public getDailyHistoricalCryptoCurrency(
+    cryptoCurrencyName: string
+  ): Observable<string[]> {
+    const apiUrl = `https://min-api.cryptocompare.com/data/histoday?fsym=${cryptoCurrencyName}&tsym=USD&limit=6&aggregate=10`;
+    return this.http.get(apiUrl).pipe(
+      map(this.extractData),
+      catchError(this.handleError)
+    );
+  }
+
+  public getCryptoCurrencyPrice(): Observable<string[]> {
+    return this.http.get(this._priceApiUrl).pipe(
       map(this.extractData),
       catchError(this.handleError)
     );
